@@ -1,0 +1,1219 @@
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Han Wang 1 Jinghui Lu 1...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   Vision as LoRA...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  paragraph
+bbox:   None
+text:   Yongjie Ye 1 Bingru Li 2 Jingqun Tang 1 Yanjie Wang 1 1 ByteDance Inc. 2 University of Birmingham...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   Abstract...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   We introduce Vision as LoRA (VoRA), a novel paradigm for transforming an LLM into an MLLM. Unlike prevalent MLLMarchitectures that rely on external vision modules for vision encoding, VoRA internalize...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Hon-Wong/VoRA ....
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   1. Introduction...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Multimodal Large Language Models (MLLMs) [2, 25, 28, 29, 58] have advanced significantly by integrating pretrained vision models with Large Language Models (LLMs) [5, 6, 8, 43, 55] through a modular d...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Yuxiang Nie 1 Can Huang 1...
+has_img: Yes
+
+=== Document Element ===
+type:   PictureItem
+label:  picture
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Figure 1. A high-level overview of VoRA. Visual parameters are indicated with an eye icon. Mainstream MLLMs adopt a modular, sequential architecture: raw pixels are first processed by a pretrained vis...
+has_img: Yes
+
+=== Document Element ===
+type:   PictureItem
+label:  picture
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   ies [12, 37] have explored unified, encoder-free architectures that process raw pixels directly within a single Transformer (i.e., an LLM), eliminating the need of external vision models. However, suc...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Relevant research [13, 32] has made attempts to address modality conflicts through parameter decoupling methods. For example, Mono-InternVL [32] introduced a Mixtureof-Experts (MoE) framework [38], em...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   creasing memory overhead....
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   To address these challenges, we propose Vision as LoRA (VoRA), a method of transforming LLMs into encoderfree MLLMs by integrating vision understanding abilities through Low-Rank Adaptation (LoRA) [21...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Furthermore, VoRA leverages pre-trained vision models as teacher models to inject visual priors into the LoRA layers. Specifically, we adopt the strategy of block-wise distillation [20]: the intermedi...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   In addition, we replace the LLM's causal attention mask with a bi-directional one for image processing, which better captures contextual relations. Meanwhile, we have also found that, unlike most conv...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Our contributions are threefold:...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   · Framework innovation: VoRA converts LLMs into MLLMs via: (1) vision as LoRA, (2) block-wise distillation, and (3) bi-directional attention for vision. Parameter decoupling between vision and languag...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   · Performance validation: When trained with a proper scale of additional data, VoRA matches conventional encoder-based MLLMs in terms of performance while reducing computational costs, demonstrating t...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   · Potential extensibility: Although we narrow down our scope to vision understanding tasks in this paper, the modality-agnostic architecture of VoRA has the potential of generalizing to other modaliti...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   2. Related Works...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   2.1. Encoder-based MLLMs...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   The dominant architecture of MLLMs has remained largely unchanged since its inception, comprising three components: a ViT [16, 36, 53], an LLM [6, 43, 50, 55], and a connector to bridge modality gaps....
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   2.2. Encoder-free MLLMs...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   The pioneering work, Fuyu [37], demonstrated the feasibility of training encoder-free models on interleaved imagetext data, though at prohibitive computational costs with limited technical transparenc...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   To overcome these problems, Mono-InternVL [32] and EVEv2 [13] proposed parameter decoupling strategies inspired by the MoE method [38], duplicating LLM parameters for vision-specific processing while ...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Figure 2(b) demonstrates that after pre-training, the LoRA parameters can be seamlessly merged into the base LLM, thereby eliminating additional inference overhead....
+has_img: Yes
+
+=== Document Element ===
+type:   PictureItem
+label:  picture
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Frozen parameters...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Unfrozen parameters...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Visual hidden states...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Textual hidden states...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   LLM Block...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Embedding...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Tokenizer...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   A...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   (b) VoRA in inference...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  paragraph
+bbox:   None
+text:   Figure 2. The architecture of VoRA. Figure (a) shows the architecture of VoRA in pre-training: in this stage, V oRA only unfreezes the LoRA layers for vision and the visual embedding layer, i.e., a sh...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   3. Vision as LoRA...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   In this section, we introduce three key components of VoRA: vision as LoRA, block-wise distillation, and bidirectional attention masks for vision....
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   3.1. Stabilize training: Vision as LoRA...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   As shown in Figure 2(a), we integrate LoRA layers into the LLM to enable vision understanding. During pre-training, images are first converted into vision embeddings using a lightweight embedding laye...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   3.2. Boost training: block-wise distillation...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   We introduce a block-wise distillation paradigm to align VoRA's intermediate visual representations with the blockwise features of a pre-trained ViT. This approach transfers visual knowledge from the ...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Distillation loss. For each transformer block i and vision token position s , we maximize cosine similarity between projected LLM features and ViT embeddings via:...
+has_img: Yes
+
+=== Document Element ===
+type:   FormulaItem
+label:  formula
+bbox:   None
+text:   \mathcal { L } _ { d i s i l l } ^ { i } = \frac { 1 } { S } \sum _ { s = 1 } ^ { S } \left ( 1 - \frac { A u x H e a d ( h _ { \amalg m } ^ { i, s } ) ^ { \top } h _ { \mathrm \vec { v i t } } ^ { i,...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   where S is the ViT's output sequence length (number of vision embeddings to represent one image), h i,s llm , h i,s vit ∈ R M denote the hidden states for the s -th token in block i , and AuxHead( · )...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   dog...
+has_img: Yes
+
+=== Document Element ===
+type:   PictureItem
+label:  picture
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Figure 3. Attention masks for vision: (a) causal attention inherits the autoregressive mask from language modeling, enforcing sequential dependency between image patches; (b) bidirectional attention o...
+has_img: Yes
+
+=== Document Element ===
+type:   PictureItem
+label:  picture
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   space. The loss is averaged across N vit blocks:...
+has_img: Yes
+
+=== Document Element ===
+type:   FormulaItem
+label:  formula
+bbox:   None
+text:   \mathcal { L } _ { d i s t i l l } = \frac { 1 } { N _ { \mathrm v i t } } \sum _ { i = 1 } ^ { N _ { \mathrm v i t } } \mathcal { L } _ { d i s t i l l } ^ { i }. \quad \quad ( 2 )...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Language modeling loss. For image-caption pairs, we optimize caption generation using cross-entropy, which is consistent with the standard approach used in LLMs:...
+has_img: Yes
+
+=== Document Element ===
+type:   FormulaItem
+label:  formula
+bbox:   None
+text:   \mathcal { L } _ { \mathrm L M } = - \sum _ { t = t _ { 0 } } ^ { T } \log P ( w _ { t } | w _ { < t }, x _ { \mathrm { i m a g e } } ), \quad ( 3 )...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   where T is the total sequence length, x image represents vision inputs, and t 0 indexes the first caption token....
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Final objective. The final loss combines both objectives:...
+has_img: Yes
+
+=== Document Element ===
+type:   FormulaItem
+label:  formula
+bbox:   None
+text:   \mathcal { L } _ { t o t a l } = \mathcal { L } _ { d i s t i l } + \mathcal { L } _ { L M }. \quad \quad ( 4 )...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   3.3. Bi-directional attention masks for vision...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   While bi-directional attention masks is common in Transformer architectures in various fields [14, 36, 57], few studies have explored replacing the causal mask of autoregressive LLMs with a bi-directi...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   As illustrated in Figure 3, we have explored the use of a bi-directional attention mask for vision. Our findings indicate that this attention mask positively impacts the final performance of VoRA, whi...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Table 1. Data used in the pre-training stage of VoRA. We use a mixture of both image and text data to alleviate the forgetting issue in training....
+has_img: Yes
+
+=== Document Element ===
+type:   TableItem
+label:  table
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   4. Data...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   4.1. Data collection and preprocessing...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   We claim that the primary focus of this work is not on data engineering or filtration; therefore, we adopt a straightforward data collection and processing strategy. Following previous studies [12, 13...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   We recognize that this dataset lacks specific world knowledge, particularly regarding landmarks, celebrities, and artworks. To address the deficiency in landmark data, we supplemented our dataset with...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   4.2. Multimodal data mixture...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   While VoRA decouples vision and language parameters, we have observed that extended caption-only training slightly degrades the LLM's instruction-following capability. To preserve this ability, we mix...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Figure 4. Language modeling losses in different settings. Training the full LLM with a new modality of data can lead to unrecoverable spike in loss curve, i.e., loss collapse....
+has_img: Yes
+
+=== Document Element ===
+type:   PictureItem
+label:  picture
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   6.4M text instruction samples. The text data were obtained directly from: Infinity-Instruction [35], SmolTalk [3], Cambrian-1 [42], and LLaVA-OneVison [24]....
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   5. Experiments...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   5.1. Implementation details...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Training setup. Unless otherwise specified, we employed AIMv2-Huge-448p [16] as the default vision encoder and Qwen2.5-7B-Instruct [50] as the LLM across all experiments. The pre-training learning rat...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   For fine-tuning, all LoRA layers were merged into the LLM, while other components (e.g., distillation modules) were eliminated. The full LLM and 6M-parameter visual embedding layer were trainable. For...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Benchmarks. As shown in Table 2 and Table 3, we evaluated the model on several benchmarks: VQAv2: VQAv2 [19]; SQA-I: ScienceQA-Image [31]; TQA: TextVQA [39]; POPE: POPE [26]; MMP p : MMEPerception [17...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   5.2. Ablation studies...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Our ablation studies focused on three key components of VoRA: vision as LoRA, block-wise distillation, and bi-directional attention masks for vision. We employed two primary methods to assess performa...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   settings: the pre-training loss on an 8M subset of our DataComp29M-recap dataset, as illustrated in Figure 5, and metrics from eight benchmarks, presented in Table 2. Additionally, we visualized the a...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Ablation on vision as LoRA. Training the full-parameter LLM proved unstable due to modality conflicts (Figure 4), consistent with findings in [12]. While reducing the learning rate to a lower value al...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Next, we analyzed different LoRA rank configurations in VoRA. Figure 5 shows that a rank of 512 resulted in a slightly higher loss (+0.006) compared to rank 1024. This trend continued in the distillat...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Ablation on bi-directional attention masks. As demonstrated in Figure 5, under fixed hyperparameters (e.g., LoRA rank and distillation type), the bi-directional attention mask consistently achieved lo...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Block-wise distillation. As shown in Figure 5 and Table 2, applying distillation to the final Transformer block alone significantly improved training efficiency. For example, the transition from the c...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Figure 5. Pre-training loss curves under different configurations. Loss values are smoothed (window=100) for visual clarity. The data sampling order was fixed to ensure fair comparison, as evidenced b...
+has_img: Yes
+
+=== Document Element ===
+type:   PictureItem
+label:  picture
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Table 2. The performance of various settings on standard benchmarks reveals that lower loss during pre-training correlates with better performance. 'LoRA-r1024 (2B)' indicates that the rank for the Lo...
+has_img: Yes
+
+=== Document Element ===
+type:   TableItem
+label:  table
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Data efficiency analysis. We measured data efficiency by reporting the relative number of training steps required to reach certain loss thresholds, using vanilla LoRA as the baseline....
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   As illustrated in Figure 7, the bi-directional attention variant without distillation (LoRAr1024 | Bidirectional | N/A) required 102.2% of the baseline training steps to reach Loss=1.5, whereas adding...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Figure 6. Average distillation loss across all blocks under various settings. Our LoRA-r1024 | Bidirectional | Block-wise configuration achieves the lowest average distillation loss across all blocks....
+has_img: Yes
+
+=== Document Element ===
+type:   PictureItem
+label:  picture
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Figure 7. Data efficiency analysis. Our experiments demonstrate that combining bi-directional attention masks for vision tokens with block-wise knowledge distillation significantly improves data effic...
+has_img: Yes
+
+=== Document Element ===
+type:   PictureItem
+label:  picture
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   wise distillation (LoRA-r1024 | Bidirectional | Block-wise) reduced this to 95.7%. The efficiency gap became more pronounced at lower loss: at Loss=1.1, the same configurations needed 84.3% and 64.5% ...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Furthermore, the ratio of data needed by our best configuration relative to vanilla LoRA decreased over time, implying that comparable performance could be achieved with N × fewer training data....
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   5.3. Standard evaluation...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   To ensure a fair comparison between VoRA and existing methods, we deliberately restricted our experimental design. While prior works (e.g., EVE, EVEv2 [13], and Mono-InternVL [32]) have leveraged mass...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   To eliminate the potential advantages provided by LLMs and ViTs, we also trained a LLaVA-1.5 model using Qwen2.5-7B and AIMv2-0.6B. As shown in Table 3, prior encoder-free methods often adopted intric...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   As shown in Table 3, VoRA achieved performance comparable to both official and reproduced LLaVA1.5 baselines on most benchmarks when evaluated under strict LLaVA-1.5 protocols [29], i.e., identical pr...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   6. Limitations...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   The most significant limitation of VoRA lies in its reliance on additional pre-training data to compensate for the absence of an external vision model, because the LLM has to learn visual feature extr...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   Asecond limitation is VoRA's lack of vision token compression. Unlike conventional encoder-based MLLMs that reduce tokens in the connector, we intentionally preserve the original LLaVA-1.5 configurati...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Table 3. Comparison with previous methods on several benchmarks. Since this paper aims to demonstrate that VoRA is a strong base model, we did not scale the fine-tuning data. Therefore, we did not com...
+has_img: Yes
+
+=== Document Element ===
+type:   TableItem
+label:  table
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  caption
+bbox:   None
+text:   Table 4. The performance of VoRA in world knowledge tasks. We acknowledge its deficiency, as expected, due to the lack of relevant in-domain data in our pre-training dataset. This is the primary reaso...
+has_img: Yes
+
+=== Document Element ===
+type:   TableItem
+label:  table
+bbox:   None
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   niques. Finally, although VoRA underperformed on world knowledge tasks, this reflects data limitations rather than architectural constraints, and could be resolved through data engineering....
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   7. Conclusion and Future Directions...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   VoRAestablishes a new paradigm for converting LLMs into MLLMs through three components: (1) vision as LoRA,...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   (2) Block-wise distillation, and (3) bi-directional attention masks for vision. By integrating vision capabilities directly into the LLM via mergeable LoRA layers for visual encoding, VoRA eliminates ...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   The architecture of VoRA is inherently extensible beyond vision-language tasks. By replacing the vision expert model with pre-trained modality-specific experts (e.g., for audio, point clouds, or biome...
+has_img: Yes
+
+=== Document Element ===
+type:   SectionHeaderItem
+label:  section_header
+bbox:   None
+text:   References...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [1] Pravesh Agrawal, Szymon Antoniak, Emma Bou Hanna, Baptiste Bout, Devendra Chaplot, Jessica Chudnovsky, Diogo Costa, Baudouin De Monicault, Saurabh Garg, Theophile Gervet, et al. Pixtral 12b. arXiv...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [2] Jean-Baptiste Alayrac, Jeff Donahue, Pauline Luc, Antoine Miech, Iain Barr, Yana Hasson, Karel Lenc, Arthur Mensch, Katherine Millican, Malcolm Reynolds, et al. Flamingo: a visual language model f...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [3] Loubna Ben Allal, Anton Lozhkov, Elie Bakouch, Gabriel Mart' ın Bl' azquez, Guilherme Penedo, Lewis Tunstall, Andr' es Marafioti, Hynek Kydl' ıˇ cek, Agust' ın Piqueres Lajar' ın, Vaibhav Srivasta...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [4] Aida Amini, Saadia Gabriel, Peter Lin, Rik KoncelKedziorski, Yejin Choi, and Hannaneh Hajishirzi. Mathqa: Towards interpretable math word problem solving with operation-based formalisms. arXiv pre...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [5] Jinze Bai, Shuai Bai, Yunfei Chu, Zeyu Cui, Kai Dang, Xiaodong Deng, Yang Fan, Wenbin Ge, Yu Han, Fei Huang, et al. Qwen technical report. arXiv preprint arXiv:2309.16609, 2023. 1, 2...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [6] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. Language models are few-shot learne...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [7] Jun Chen, Deyao Zhu, Xiaoqian Shen, Xiang Li, Zechun Liu, Pengchuan Zhang, Raghuraman Krishnamoorthi, Vikas Chandra, Yunyang Xiong, and Mohamed Elhoseiny. Minigpt-v2: large language model as a uni...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [8] Zhe Chen, Weiyun Wang, Hao Tian, Shenglong Ye, Zhangwei Gao, Erfei Cui, Wenwen Tong, Kongzhi Hu, Jiapeng Luo, Zheng Ma, et al. How far are we to gpt-4v? closing the gap to commercial multimodal mo...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [9] Zhe Chen, Jiannan Wu, Wenhai Wang, Weijie Su, Guo Chen, Sen Xing, Muyan Zhong, Qinglong Zhang, Xizhou Zhu, Lewei Lu, et al. Internvl: Scaling up vision foundation models and aligning for generic v...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [10] Mike Conover, Matt Hayes, Ankit Mathur, Jianwei Xie, Jun Wan, Sam Shah, Ali Ghodsi, Patrick Wendell, Matei Zaharia, and Reynold Xin. Free dolly: Introducing the world's first truly open instructi...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [11] Wenliang Dai, Junnan Li, Dongxu Li, Anthony Meng Huat Tiong, Junqi Zhao, Weisheng Wang, Boyang Li, Pascale Fung, and Steven Hoi. Instructblip: Towards generalpurpose vision-language models with i...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [12] Haiwen Diao, Yufeng Cui, Xiaotong Li, Yueze Wang, Huchuan Lu, and Xinlong Wang. Unveiling encoder-free vision-language models. Advances in Neural Information Processing Systems, 37:52545-52567, 2...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [13] Haiwen Diao, Xiaotong Li, Yufeng Cui, Yueze Wang, Haoge Deng, Ting Pan, Wenxuan Wang, Huchuan Lu, and Xinlong Wang. Evev2: Improved baselines for encoder-free visionlanguage models. arXiv preprin...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [14] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, et al. An image is wo...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [15] Yuxin Fang, Wen Wang, Binhui Xie, Quan Sun, Ledell Wu, Xinggang Wang, Tiejun Huang, Xinlong Wang, and Yue Cao. Eva: Exploring the limits of masked visual representation learning at scale. In Proc...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [16] Enrico Fini, Mustafa Shukor, Xiujun Li, Philipp Dufter, Michal Klein, David Haldimann, Sai Aitharaju, Victor Guilherme Turrisi da Costa, Louis B' ethune, Zhe Gan, et al. Multimodal autoregressive...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [17] Chaoyou Fu, Peixian Chen, Yunhang Shen, Yulei Qin, Mengdan Zhang, Xu Lin, Jinrui Yang, Xiawu Zheng, Ke Li, Xing Sun, et al. Mme: A comprehensive evaluation benchmark for multimodal large language...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [18] Samir Yitzhak Gadre, Gabriel Ilharco, Alex Fang, Jonathan Hayase, Georgios Smyrnis, Thao Nguyen, Ryan Marten, Mitchell Wortsman, Dhruba Ghosh, Jieyu Zhang, et al. Datacomp: In search of the next ...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [19] Yash Goyal, Tejas Khot, Douglas Summers-Stay, Dhruv Batra, and Devi Parikh. Making the v in vqa matter: Elevating the role of image understanding in visual question answering. In Proceedings of t...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [20] Geoffrey Hinton, Oriol Vinyals, and Jeff Dean. Distilling the knowledge in a neural network. arXiv preprint arXiv:1503.02531, 2015. 2, 3...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [21] Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan AllenZhu, Yuanzhi Li, Shean Wang, Lu Wang, Weizhu Chen, et al. Lora: Low-rank adaptation of large language models. ICLR, 1(2):3, 2022. 2...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [22] Aniruddha Kembhavi, Mike Salvato, Eric Kolve, Minjoon Seo, Hannaneh Hajishirzi, and Ali Farhadi. A diagram is...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   worth a dozen images. In Computer Vision-ECCV 2016: 14th European Conference, Amsterdam, The Netherlands, October 11-14, 2016, Proceedings, Part IV 14, pages 235251. Springer, 2016. 5...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [23] Bohao Li, Yuying Ge, Yixiao Ge, Guangzhi Wang, Rui Wang, Ruimao Zhang, and Ying Shan. Seed-bench: Benchmarking multimodal large language models. In Proceedings of the IEEE/CVF Conference on Compu...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [24] Bo Li, Yuanhan Zhang, Dong Guo, Renrui Zhang, Feng Li, Hao Zhang, Kaichen Zhang, Peiyuan Zhang, Yanwei Li, Ziwei Liu, et al. Llava-onevision: Easy visual task transfer. arXiv preprint arXiv:2408....
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [25] Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. Blip-2: Bootstrapping language-image pre-training with frozen image encoders and large language models. In International conference on machi...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [26] Yifan Li, Yifan Du, Kun Zhou, Jinpeng Wang, Wayne Xin Zhao, and Ji-Rong Wen. Evaluating object hallucination in large vision-language models. arXiv preprint arXiv:2305.10355, 2023. 5...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [27] Wing Lian, Bleys Goodson, Eugene Pentland, Austin Cook, Chanvichet Vong, and 'Teknium'. Openorca: An open dataset of gpt augmented flan reasoning traces. https: //https://huggingface.co/datasets/...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [28] Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. Visual instruction tuning. Advances in neural information processing systems, 36:34892-34916, 2023. 1, 2...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [29] Haotian Liu, Chunyuan Li, Yuheng Li, and Yong Jae Lee. Improved baselines with visual instruction tuning. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pag...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [30] Yuan Liu, Haodong Duan, Yuanhan Zhang, Bo Li, Songyang Zhang, Wangbo Zhao, Yike Yuan, Jiaqi Wang, Conghui He, Ziwei Liu, et al. Mmbench: Is your multi-modal model an all-around player? In Europea...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [31] Pan Lu, Swaroop Mishra, Tanglin Xia, Liang Qiu, Kai-Wei Chang, Song-Chun Zhu, Oyvind Tafjord, Peter Clark, and Ashwin Kalyan. Learn to explain: Multimodal reasoning via thought chains for science...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [32] Gen Luo, Xue Yang, Wenhan Dou, Zhaokai Wang, Jifeng Dai, Yu Qiao, and Xizhou Zhu. Mono-internvl: Pushing the boundaries of monolithic multimodal large language models with endogenous visual pre-t...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [33] Ziyang Luo, Can Xu, Pu Zhao, Qingfeng Sun, Xiubo Geng, Wenxiang Hu, Chongyang Tao, Jing Ma, Qingwei Lin, and Daxin Jiang. Wizardcoder: Empowering code large language models with evol-instruct. ar...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [34] Arindam Mitra, Hamed Khanpour, Corby Rosset, and...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   Ahmed Awadallah. Orca-math: Unlocking the potential of slms in grade school math, 2024. 4...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [35] Beijing Academy of Artificial Intelligence (BAAI). Infinity instruct. arXiv preprint arXiv:2406.XXXX, 2024. 4, 5...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [36] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learning transferable visual models from...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [37] Curtis Hawthorne Maxwell Nye Augustus Odena Arushi Somani RohanBavishi, Erich Elsen and Sa˘ gnak Tas ¸ırlar. Introducing our multimodal models. 2023. 1, 2, 4...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [38] Noam Shazeer, Azalia Mirhoseini, Krzysztof Maziarz, Andy Davis, Quoc Le, Geoffrey Hinton, and Jeff Dean. Outrageously large neural networks: The sparsely-gated mixtureof-experts layer. arXiv prep...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [39] Amanpreet Singh, Vivek Natarajan, Meet Shah, Yu Jiang, Xinlei Chen, Dhruv Batra, Devi Parikh, and Marcus Rohrbach. Towards vqa models that can read. In Proceedings of the IEEE/CVF conference on c...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [40] Grok Team. Grok-1.5 vision preview, 2024. 5...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [41] Llama Team. Llama 3.2: Revolutionizing edge ai and vision with open, customizable models, 2024. 2...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [42] Peter Tong, Ellis Brown, Penghao Wu, Sanghyun Woo, Adithya Jairam Vedagiri IYER, Sai Charitha Akula, Shusheng Yang, Jihan Yang, Manoj Middepogu, Ziteng Wang, et al. Cambrian-1: A fully open, visi...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [43] Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne Lachaux, Timoth' ee Lacroix, Baptiste Rozi' ere, Naman Goyal, Eric Hambro, Faisal Azhar, et al. Llama: Open and efficien...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [44] Han Wang, Yuxiang Nie, Yongjie Ye, Deng GuanYu, Yanjie Wang, Shuai Li, Haiyang Yu, Jinghui Lu, and Can Huang. Dynamic-vlm: Simple dynamic visual token compression for videollm. arXiv preprint arX...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [45] Han Wang, Yongjie Ye, Yanjie Wang, Yuxiang Nie, and Can Huang. Elysium: Exploring object-level perception in videos via mllm. In European Conference on Computer Vision, pages 166-185. Springer, 2...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [46] P Wang, S Bai, S Tan, S Wang, Z Fan, J Bai, K Chen, X Liu, J Wang, W Ge, et al. Qwen2-vl: Enhancing visionlanguage model's perception of the world at any resolution, 2024. URL https://arxiv. org/...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [47] Weihan Wang, Qingsong Lv, Wenmeng Yu, Wenyi Hong, Ji Qi, Yan Wang, Junhui Ji, Zhuoyi Yang, Lei Zhao, Song XiXuan, et al. Cogvlm: Visual expert for pretrained language models. Advances in Neural I...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [48] Tobias Weyand, Andre Araujo, Bingyi Cao, and Jack Sim. Google landmarks dataset v2-a large-scale benchmark for instance-level recognition and retrieval. In Proceedings of...
+has_img: Yes
+
+=== Document Element ===
+type:   TextItem
+label:  text
+bbox:   None
+text:   the IEEE/CVF conference on computer vision and pattern recognition, pages 2575-2584, 2020. 4...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [49] Ge Zhang Yao Fu Wenhao Huang Huan Sun Yu Su Wenhu Chen Xiang Yue, Xingwei Qu. Mammoth: Building math generalist models through hybrid instruction tuning. arXiv preprint arXiv:2309.05653, 2023. 4...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [50] An Yang, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chengyuan Li, Dayiheng Liu, Fei Huang, Haoran Wei, et al. Qwen2. 5 technical report. arXiv preprint arXiv:2412.15115, 2024. ...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [51] Weihao Yu, Zhengyuan Yang, Linjie Li, Jianfeng Wang, Kevin Lin, Zicheng Liu, Xinchao Wang, and Lijuan Wang. Mm-vet: Evaluating large multimodal models for integrated capabilities. arXiv preprint ...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [52] Xiang Yue, Yuansheng Ni, Kai Zhang, Tianyu Zheng, Ruoqi Liu, Ge Zhang, Samuel Stevens, Dongfu Jiang, Weiming Ren, Yuxuan Sun, et al. Mmmu: A massive multi-discipline multimodal understanding and ...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [53] Xiaohua Zhai, Basil Mustafa, Alexander Kolesnikov, and Lucas Beyer. Sigmoid loss for language image pre-training. In Proceedings of the IEEE/CVF international conference on computer vision, pages...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [54] Biao Zhang and Rico Sennrich. Root mean square layer normalization. Advances in Neural Information Processing Systems, 32, 2019. 3...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [55] Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao Zhuang, Zi Lin, Zhuohan Li, Dacheng Li, Eric. P Xing, Hao Zhang, Joseph E. Gonzalez, and Ion Stoica. Judging llm-as-...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [56] Tianyu Zheng, Ge Zhang, Tianhao Shen, Xueling Liu, Bill Yuchen Lin, Jie Fu, Wenhu Chen, and Xiang Yue. Opencodeinterpreter: Integrating code generation with execution and refinement. arXiv prepri...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [57] Chunting Zhou, Lili Yu, Arun Babu, Kushal Tirumala, Michihiro Yasunaga, Leonid Shamis, Jacob Kahn, Xuezhe Ma, Luke Zettlemoyer, and Omer Levy. Transfusion: Predict the next token and diffuse imag...
+has_img: Yes
+
+=== Document Element ===
+type:   ListItem
+label:  list_item
+bbox:   None
+text:   [58] Deyao Zhu, Jun Chen, Xiaoqian Shen, Xiang Li, and Mohamed Elhoseiny. Minigpt-4: Enhancing vision-language understanding with advanced large language models. arXiv preprint arXiv:2304.10592, 2023....
+has_img: Yes
+

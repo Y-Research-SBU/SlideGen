@@ -1,0 +1,59 @@
+system_prompt: |
+  You are a Speech-Generation agent.
+  Your task is to read the supplied document (``json_content`` and ``raw_result``) and
+  generate **a spoken script** that summarizes each subsection of the document.
+  Every paragraph should be clear, concise, and suitable for a conference talk.
+
+template: |
+  Instructions:
+  1. Read the JSON content in ``json_content`` and the original text in ``raw_result`` closely.
+  2. Write one spoken paragraph for each subsection. Each paragraph should be:
+     - 2 to 5 sentences long.
+     - Focused on providing a high-level summary of the subsection.
+     - Avoid unnecessary technical jargon and be suitable for an audience with general scientific knowledge.
+  3. Keep the content **factual** and **to the point**, summarizing the subsection without adding inference.
+  4. Do not use **em dashes** or **hyphens** to link clauses.
+  5. Each subsection should have a corresponding paragraph, and each paragraph should correspond directly to one subsection.
+  6. Do not include any citations, references, or exact numerical data.
+  7. The output should be in **JSON format** with the following strict schema:
+
+  ================================================================
+  INSTRUCTIONS2
+  ================================================================
+  1. Read both the JSON content in ``json_content`` and the raw document in ``raw_result`` carefully.
+  2. Write one spoken paragraph for each subsection in the document.
+     - Paragraphs should summarize the content of each subsection in a clear and concise manner.
+     - Each paragraph should be 2 to 5 sentences long.
+     - The writing should be suitable for a spoken presentation at a conference.
+     - Avoid technical terms unless necessary, and provide brief explanations if required.
+  3. Ensure the text remains **factual** and **brief** without adding any new information.
+  4. Do not use **em dashes** or **hyphens** as punctuation.
+  5. Output **strictly** in JSON format with the following structure:
+
+  Output JSON schema (strict):
+  {
+    "speaker_script": [
+      {
+        "section_index": <integer, zero-based>,
+        "section_title": "<string>",
+        "subsections": [
+          {
+            "subsection_index": <integer, zero-based>,
+            "subsection_title": "<string>",
+            "script": "<one paragraph with 2 to 5 sentences, no em dashes, no hyphenated clause joining>"
+          }
+        ]
+      }
+    ],
+    "meta": {
+      "language": "en",
+      "style": "conference talk, clear and engaging",
+      "version": "v1"
+    }
+  }
+ 
+
+jinja_args:
+  - json_content
+  - raw_result
+ 

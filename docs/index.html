@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+
+ 
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <title>SlideGen: Collaborative Multimodal Agents for Scientific Slide Generation</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="css/vendors/aos.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+</head>
+
+<body class="font-inter antialiased bg-white text-gray-900 tracking-tight">
+
+    <!-- Page wrapper -->
+    <div class="flex flex-col min-h-screen overflow-hidden supports-[overflow:clip]:overflow-clip">
+
+        <!-- Site header -->
+        <header class="fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out" x-data="handleHeader" @scroll.window="isTop" :class="{ 'bg-white backdrop-blur-sm shadow-lg' : !top }">
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    Alpine.data('handleHeader', () => ({
+                        top: true,
+                        isTop() {
+                            this.top = window.pageYOffset < 10
+                        },
+                        init() {
+                            this.isTop()
+                        }
+                    }))                 
+                })        
+            </script>            
+            <div class="max-w-6xl mx-auto px-5 sm:px-6">
+                <div class="flex items-center justify-between h-16 md:h-20">
+ 
+
+                    <!-- Desktop navigation -->
+                    <nav class="hidden md:flex md:grow">
+
+                        <!-- Desktop menu links -->
+                        <ul class="flex grow justify-end flex-wrap items-center">
+                            <li>
+                                <a class="text-gray-600 hover:text-gray-900 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out text-lg" href="#abstract" onclick="document.querySelector('#abstract').scrollIntoView({behavior: 'smooth'})">Abstract</a>
+                            </li>
+                            <li>
+                                <a class="text-gray-600 hover:text-gray-900 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out text-lg" href="#method" onclick="document.querySelector('#method').scrollIntoView({behavior: 'smooth'})">Method</a>
+                            </li>
+                             
+                            <li>
+                                <a class="text-gray-600 hover:text-gray-900 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out text-lg" href="#results" onclick="document.querySelector('#results').scrollIntoView({behavior: 'smooth'})">Results</a>
+                            </li>
+                        </ul>
+
+                    </nav>
+                    
+                    <!-- Mobile menu -->
+                    <div class="flex md:hidden" x-data="{ expanded: false }">
+
+                        <!-- Hamburger button -->
+                        <button
+                            class="hamburger"
+                            :class="{ 'active': expanded }"
+                            @click.stop="expanded = !expanded"
+                            aria-controls="mobile-nav"
+                            :aria-expanded="expanded"
+                        >
+                            <span class="sr-only">Menu</span>
+                            <svg class="w-6 h-6 fill-current text-gray-900" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect y="4" width="24" height="2" />
+                                <rect y="11" width="24" height="2" />
+                                <rect y="18" width="24" height="2" />
+                            </svg>
+                        </button>
+
+                        <!-- Mobile navigation -->
+                        <nav
+                            id="mobile-nav"
+                            class="absolute top-full h-screen pb-16 z-20 left-0 w-full overflow-scroll bg-white"
+                            @click.outside="expanded = false"
+                            @keydown.escape.window="expanded = false"
+                            x-show="expanded"
+                            x-transition:enter="transition ease-out duration-200 transform"
+                            x-transition:enter-start="opacity-0 -translate-y-2"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-out duration-200"
+                            x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0"                    
+                            x-cloak
+                        >
+                            <ul class="px-5 py-2">
+                                <li>
+                                    <a class="flex text-gray-600 hover:text-gray-900 py-2 text-lg" href="#abstract" onclick="document.querySelector('#abstract').scrollIntoView({behavior: 'smooth'})">Abstract</a>
+                                </li>
+                                <li>
+                                    <a class="flex text-gray-600 hover:text-gray-900 py-2 text-lg" href="#method" onclick="document.querySelector('#method').scrollIntoView({behavior: 'smooth'})">Method</a>
+                                </li>
+                                <li>
+                                    <a class="flex text-gray-600 hover:text-gray-900 py-2 text-lg" href="#evaluation" onclick="document.querySelector('#evaluation').scrollIntoView({behavior: 'smooth'})">Evaluation</a>
+                                </li>
+                                <li>
+                                    <a class="flex text-gray-600 hover:text-gray-900 py-2 text-lg" href="#results" onclick="document.querySelector('#results').scrollIntoView({behavior: 'smooth'})">Results</a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <!-- Page content -->
+        <main class="grow">
+            
+            <!-- Hero -->
+            <section class="relative">
+
+                <!-- Illustration behind hero content -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none -z-1" aria-hidden="true">
+                    <svg width="1360" height="578" viewBox="0 0 1360 578" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="illustration-01">
+                                <stop stop-color="#FFF" offset="0%" />
+                                <stop stop-color="#EAEAEA" offset="77.402%" />
+                                <stop stop-color="#DFDFDF" offset="100%" />
+                            </linearGradient>
+                        </defs>
+                        <g fill="url(#illustration-01)" fill-rule="evenodd">
+                            <circle cx="1232" cy="128" r="128" />
+                            <circle cx="155" cy="443" r="64" />
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="max-w-screen-xl mx-auto px-4 sm:px-6">
+
+                    <!-- Hero content -->
+                    <div class="pt-20 pb-12 md:pt-20 md:pb-20">
+
+                        <!-- Section header -->
+                        <div class="text-center pb-12 md:pb-16 max-w-none">
+                            <div class="mb-4" data-aos="zoom-y-out">
+                                <!-- First line: Logo + SlideGen -->
+                                <div class="flex items-center justify-center mb-3">
+                                    <img src="images/logo.jpg" alt="SlideGen Logo" class="w-auto mr-6 max-w-full" style="height: 6.0rem;">
+                                    <h1 class="font-extrabold leading-tighter tracking-tighter" style="font-size: 4.0rem; line-height: 1.0;">
+                                        <span style="color: black;">SlideGen</span>
+                                    </h1>
+                                </div>
+                                <!-- Second line: Subtitle -->
+                                <h2 class="text-3xl md:text-4xl font-extrabold leading-tighter tracking-tighter whitespace-nowrap" style="color: #333; margin-bottom: 2.5rem;">
+                                             Collaborative Multimodal Agents for Scientific Slide Generation
+                                </h2>
+                            </div>
+                            <div class="max-w-4xl mx-auto">
+                                <div class="text-xl text-gray-700 mb-6" data-aos="zoom-y-out" data-aos-delay="150">
+                                    <p class="mb-8">
+                                        <a href="https://hadlay-zhang.github.io/" target="_blank" class="hover:underline transition-all duration-200" style="color: #0645ad;">Xin Liang</a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="https://wyattz23.github.io/" target="_blank" class="hover:underline transition-all duration-200" style="color: #0645ad;">Xiang Zhang</a><sup>2</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="https://upup-wei.github.io/" target="_blank" class="hover:underline transition-all duration-200" style="color: #0645ad;">Yiwei Xu</a><sup>3</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="#" class="hover:underline transition-all duration-200" style="color: #0645ad;">Siqi Sun</a><sup>4</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="https://chenyuyou.me/" target="_blank" class="hover:underline transition-all duration-200" style="color: #0645ad;">Chenyu You</a><sup>1</sup>
+                                    </p>
+                                    <p class="text-lg text-gray-600">
+                                        <sup>1</sup>Stony Brook University&nbsp;&nbsp;&nbsp;&nbsp;<sup>2</sup>University of British Columbia<br>
+                                        <sup>3</sup>University of California, Los Angeles&nbsp;&nbsp;&nbsp;&nbsp;<sup>4</sup>Fudan University&nbsp;&nbsp;&nbsp;&nbsp; 
+                                    </p>
+                                </div>
+                                <div class="flex flex-wrap justify-center gap-4 md:gap-6" data-aos="zoom-y-out" data-aos-delay="300">
+                                    <a class="btn text-white px-6 py-3 rounded-full flex items-center gap-2 transition-all duration-200 shadow-lg hover:shadow-xl" style="background-color: #0645ad;" onmouseover="this.style.backgroundColor='#0538a0'" onmouseout="this.style.backgroundColor='#0645ad'" href="https://arxiv.org/pdf/2512.04529" target="_blank">
+                                        <!-- <i class="fa-solid fa-file-pdf" style="color: #ffffff;"></i> -->
+                                        <i class="fa-solid fa-file" style="color: #ffffff;"></i>
+                                        <span>Paper</span>
+                                    </a>
+                                    <a class="btn text-white px-6 py-3 rounded-full flex items-center gap-2 transition-all duration-200 shadow-lg hover:shadow-xl" style="background-color: #0645ad;" onmouseover="this.style.backgroundColor='#0538a0'" onmouseout="this.style.backgroundColor='#0645ad'" href="https://github.com/Y-Research-SBU/SlideGen" target="_blank">
+                                        <i class="fa-brands fa-github"></i>
+                                        <span>Code</span>
+                                    </a>
+                                    <a class="btn text-white px-6 py-3 rounded-full flex items-center gap-2 transition-all duration-200 shadow-lg hover:shadow-xl"
+                                        style="background-color: #0645ad;"
+                                        onmouseover="this.style.backgroundColor='#0538a0'"
+                                        onmouseout="this.style.backgroundColor='#0645ad'"
+                                        href="images/wechat.jpg"
+                                        target="_blank"
+                                        rel="noopener">
+                                        <i class="fa-brands fa-weixin"></i>
+                                        <span>WeChat</span>
+                                        </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Input/Output Demo -->
+                        <div x-data="{ modalExpanded: false }">
+  <div class="relative flex justify-center mb-8" data-aos="zoom-y-out" data-aos-delay="450">
+    <div class="flex flex-row gap-8 md:gap-12 max-w-5xl items-start">
+
+      <!-- Input: Paper -->
+      <div class="flex flex-col items-center flex-1 min-w-0">
+        <div class="io-box">
+          <img
+            class="io-img rounded shadow-xl cursor-pointer hover:shadow-2xl transition-shadow duration-300"
+            src="images/example.jpg"
+            alt="Input Paper"
+            onclick="openPaperPdf()"
+          />
+        </div>
+
+        <p class="text-lg text-gray-700 mt-4 text-center">
+          <strong>Input</strong>: Paper<span style="color:#0645ad;">.pdf</span>
+        </p>
+      </div>
+
+      <!-- Output: Slide -->
+      <div class="flex flex-col items-center flex-1 min-w-0">
+        <div class="io-box">
+          <img
+            class="io-img rounded shadow-xl cursor-pointer hover:shadow-2xl transition-shadow duration-300"
+            src="images/4o_4o_output_slides1_01.jpg"
+            alt="Output Deck"
+            onclick="openPosterImage()"
+          />
+        </div>
+
+        <p class="text-lg text-gray-700 mt-4 text-center">
+          <strong>Output</strong>: Slide<span style="color:#0645ad;">.pptx</span>
+        </p>
+      </div>
+
+    </div>
+  </div>
+ 
+ 
+ 
+
+                            <!-- Demo Video Button -->
+                            <div class="relative flex justify-center mb-8" data-aos="zoom-y-out" data-aos-delay="500">
+                                <button class="flex items-center text-gray-700 bg-gray-100 hover:bg-gray-300 px-6 py-4 rounded-full font-medium group shadow-lg hover:shadow-xl transition-all duration-300" @click.prevent="modalExpanded = true" aria-controls="demo-modal">
+                                    <svg class="w-6 h-6 fill-current text-gray-600 group-hover:text-gray-700 shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0 2C5.373 24 0 18.627 0 12S5.373 0 12 0s12 5.373 12 12-5.373 12-12 12z" />
+                                        <path d="M10 17l6-5-6-5z" />
+                                    </svg>
+                                    <span class="ml-3">Watch the Demo</span>
+                                </button>
+                            </div>
+
+                            <!-- Modal backdrop -->
+                            <div
+                                class="fixed inset-0 z-50 bg-white bg-opacity-75 transition-opacity backdrop-blur-sm"
+                                x-show="modalExpanded"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="transition ease-out duration-100"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0"
+                                aria-hidden="true"
+                                x-cloak
+                            ></div>
+
+                            <!-- Modal dialog -->
+                            <div
+                                id="demo-modal"
+                                class="fixed inset-0 z-50 overflow-hidden flex items-center justify-center transform px-4 sm:px-6"
+                                role="dialog"
+                                aria-modal="true"
+                                aria-labelledby="demo-modal-headline"
+                                x-show="modalExpanded"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 scale-95"
+                                x-transition:enter-end="opacity-100 scale-100"
+                                x-transition:leave="transition ease-out duration-200"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-95"
+                                x-cloak
+                            >
+                                <div class="bg-white overflow-auto max-w-6xl w-full max-h-full rounded-lg shadow-2xl" @click.outside="modalExpanded = false" @keydown.escape.window="modalExpanded = false">
+                                    <div class="relative pb-9/16">
+                                        <video x-init="$watch('modalExpanded', value => value ? $el.play() : $el.pause())" class="absolute w-full h-full" width="1920" height="1080" loop controls>
+                                            <source src="video/demo.mp4" type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Abstract -->
+            <section class="relative" id="abstract">
+                <div class="max-w-6xl mx-auto px-4 sm:px-6">
+                    <div class="pt-12 md:pt-20">
+
+                        <!-- Section header -->
+                        <div class="max-w-4xl mx-auto pb-12 md:pb-16">
+                            <h1 class="h2 mb-4 text-center">Abstract</h1>
+                            <p class="text-xl text-gray-600">
+                                Generating academic slides from scientific papers is a challenging multimodal reasoning task that requires both long-context understanding and deliberate visual planning. Existing approaches largely reduce it to text-only summarization, overlooking the visual component and design-intensive nature of slide creation. In this paper, we introduce \textbf{SlideGen}, an agentic, modular, and visual-in-the-loop framework for scientific paper-to-slide generation. SlideGen orchestrates a group of vision–language agents that reason collaboratively over the document structure and semantics, producing editable PPTX slides with logical flow and compelling visual presentation. By integrating coordinated outlining, mapping, arrangement, note synthesis, and iterative refinement, our system consistently delivers slides  of expert-level quality. Across diverse benchmarks and strong baselines, SlideGen outperforms existing methods in visual quality, content faithfulness, and readability, positioning it as the new state of the art in automated slide generation. Our work establishes a foundation for design-aware multi-modal slide generation, demonstrating how agentic collaboration can bridge understanding and presentation in complex multimodal reasoning tasks. 
+ 
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="relative" id="method">
+
+                <!-- Section background (needs .relative class on parent and next sibling elements) -->
+                <div class="absolute inset-0 bg-gray-100 pointer-events-none" aria-hidden="true"></div>
+                <div class="absolute left-0 right-0 m-auto w-px p-px h-20 bg-gray-200 transform -translate-y-1/2"></div>
+                <div class="absolute left-0 right-0 bottom-0 m-auto w-px p-px h-20 bg-gray-200 transform translate-y-1/2"></div>
+
+                <div class="relative max-w-6xl mx-auto px-4 sm:px-6">
+                    <div class="pt-12 md:pt-20 pb-12 md:pb-20">
+
+                        <!-- Section header -->
+ 
+ 
+ <style>
+  .card-pop{
+    position: relative;
+    z-index: 0;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    padding: 1.5rem;
+    box-shadow: 0 8px 22px rgba(0,0,0,.10);
+    transform: translateY(0) scale(1);
+    transition:
+      transform 650ms cubic-bezier(.16,1,.3,1),
+      box-shadow 650ms cubic-bezier(.16,1,.3,1),
+      border-color 650ms cubic-bezier(.16,1,.3,1);
+    will-change: transform, box-shadow;
+  }
+  .card-pop:hover{
+    z-index: 20;
+    transform: translateY(-10px) scale(1.06);
+    box-shadow: 0 28px 70px rgba(0,0,0,.26);
+    border-color: #d1d5db;
+  }
+
+  .card-pop::after{
+    content:"";
+    position:absolute;
+    inset:-10px;
+    border-radius: 1.2rem;
+    background: radial-gradient(closest-side, rgba(0,0,0,.10), transparent 70%);
+    opacity:0;
+    filter: blur(18px);
+    transition: opacity 650ms cubic-bezier(.16,1,.3,1);
+    pointer-events:none;
+  }
+  .card-pop:hover::after{ opacity:1; }
+</style>
+
+
+<div class="max-w-5xl mx-auto pb-12 md:pb-16">
+  <h1 class="h2 mb-8 text-center">Method Overview</h1>
+ 
+             
+
+  <div class="space-y-5 text-gray-700">
+           <!-- Top image -->
+<div class="mt-20 md:mt-24 pb-12 md:pb-16">
+  <img src="images/teaser.jpg" class="w-full h-auto max-w-4xl mx-auto" loading="lazy" alt="Features top" />
+</div>
+    <!-- Overview -->
+    <div class="card-pop">
+      <div class="flex items-start gap-4">
+         
+        <div>
+          <div class="text-lg font-semibold text-gray-900"><strong>Overview</strong></div>
+          <p class="mt-1 text-base text-gray-600 leading-relaxed">
+            <strong>SlideGen</strong> is a modular multimodal-agentic framework that converts scientific papers into
+            structured, editable PPTX slides. It extracts paper content into an explicit outline, then plans each
+            slide with visual reasoning for readability and compactness. The pipeline includes six specialized
+            agents covering the full workflow.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="grid gap-4">
+
+      <div class="card-pop">
+        <div class="flex items-start gap-4">
+           
+          <div>
+            <div class="text-lg font-semibold text-gray-900"><strong>Preprocessing</strong></div>
+            <p class="mt-1 text-base text-gray-600 leading-relaxed">
+              We parse the PDF into a Markdown-like format and build a shared asset library: <em>text assets</em>
+              align headings with paragraph content, and <em>visual assets</em> align figure/table captions with
+              extracted images.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-pop">
+        <div class="flex items-start gap-4">
+           
+          <div>
+            <div class="text-lg font-semibold text-gray-900"><strong>Outliner</strong></div>
+            <p class="mt-1 text-base text-gray-600 leading-relaxed">
+              Outliner reads the document and produces a two-level presentation outline: section ordering plus
+              slide-level plans with titles and concise summaries. It outputs a JSON-like structure with global
+              metadata and an ordered slide list.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-pop">
+        <div class="flex items-start gap-4">
+          
+          <div>
+            <div class="text-lg font-semibold text-gray-900"><strong>Mapper</strong></div>
+            <p class="mt-1 text-base text-gray-600 leading-relaxed">
+              Mapper assigns figures and tables to the slide(s) they best support and records a short rationale for
+              each placement. Assets can be reused across slides, while irrelevant visuals are left unassigned.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-pop">
+        <div class="flex items-start gap-4">
+           
+          <div>
+            <div class="text-lg font-semibold text-gray-900"><strong>Formulizer</strong></div>
+            <p class="mt-1 text-base text-gray-600 leading-relaxed">
+              Formulizer extracts formulas and links them to the most relevant sections, storing a normalized
+              representation (LaTeX or crop) plus a brief explanation from surrounding context. It supports both
+              automatic extraction and human-in-the-loop selection.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-pop">
+        <div class="flex items-start gap-4">
+           
+          <div>
+            <div class="text-lg font-semibold text-gray-900"><strong>Arranger</strong></div>
+            <p class="mt-1 text-base text-gray-600 leading-relaxed">
+              Arranger selects layouts from an extensible template library (e.g., text-only, image-left/right,
+              multi-image, formula strip) based on element types and image sizes. This separation improves visual
+              balance and consistency across the deck.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-pop">
+        <div class="flex items-start gap-4">
+           
+          <div>
+            <div class="text-lg font-semibold text-gray-900"><strong>Refiner &amp; Speaker</strong></div>
+            <p class="mt-1 text-base text-gray-600 leading-relaxed">
+              Refiner improves global coherence by merging redundant slides, choosing better text templates, and
+              deriving a readable theme color from figures. Speaker then generates short presenter notes per slide,
+              producing a talk-ready script aligned with the final deck.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+ 
+ 
+
+                        <!-- Section content -->
+                        <div class="md:grid md:grid-cols-12 md:gap-6" x-data="{ tab: '1' }">
+
+                            <!-- Content -->
+                            <div class="max-w-xl md:max-w-none md:w-full mx-auto md:col-span-7 lg:col-span-6 md:mt-6">
+                                <div class="md:pr-4 lg:pr-12 xl:pr-16 mb-8">
+                                    <h3 class="h3 mb-3">Aesthetic-Aware VLMs</h3>
+                                    <p class="text-xl text-gray-600">SlideGen integrates visual design as a first-class objective in automated slide generation, reducing visual fatigue
+    and producing more polished decks.  </p>
+                                </div>
+                                <!-- Tabs buttons -->
+                                <div class="mb-8 md:mb-0">                        
+                                    <button
+                                        :class="tab !== '1' ? 'bg-white shadow-md border-gray-200 hover:shadow-lg' : 'bg-gray-200 border-transparent'"
+                                        class="text-left flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3"
+                                        @click.prevent
+                                        @click="tab = '1'"
+                                    >
+                                        <div>
+                                            <div class="font-bold leading-snug tracking-tight mb-1">Outliner</div>
+                                            <div class="text-gray-600">Creates a narrative slide outline with concise bullet points.</div>
+                                        </div>
+                                        <div class="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow shrink-0 ml-3">
+                                            <svg class="w-3 h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M11.953 4.29a.5.5 0 00-.454-.292H6.14L6.984.62A.5.5 0 006.12.173l-6 7a.5.5 0 00.379.825h5.359l-.844 3.38a.5.5 0 00.864.445l6-7a.5.5 0 00.075-.534z" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                    <button
+                                        :class="tab !== '2' ? 'bg-white shadow-md border-gray-200 hover:shadow-lg' : 'bg-gray-200 border-transparent'"
+                                        class="text-left flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3"
+                                        @click.prevent
+                                        @click="tab = '2'"
+                                    >
+                                        <div>
+                                            <div class="font-bold leading-snug tracking-tight mb-1">Arranger</div>
+                                            <div class="text-gray-600">   Chooses from a diverse template library to create balanced, varied compositions beyond simple vertical stacking.</div>
+                                        </div>
+                                        <div class="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow shrink-0 ml-3">
+                                            <svg class="w-3 h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M11.953 4.29a.5.5 0 00-.454-.292H6.14L6.984.62A.5.5 0 006.12.173l-6 7a.5.5 0 00.379.825h5.359l-.844 3.38a.5.5 0 00.864.445l6-7a.5.5 0 00.075-.534z" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                    <button
+                                        :class="tab !== '3' ? 'bg-white shadow-md border-gray-200 hover:shadow-lg' : 'bg-gray-200 border-transparent'"
+                                        class="text-left flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out"
+                                        @click.prevent
+                                        @click="tab = '3'"
+                                    >
+                                        <div>
+                                            <div class="font-bold leading-snug tracking-tight mb-1">Refiner</div>
+                                            <div class="text-gray-600">  Finalizes visual consistency and readability with slide consolidation and theme-color refinement.</div>
+                                        </div>
+                                        <div class="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow shrink-0 ml-3">
+                                            <svg class="w-3 h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M11.953 4.29a.5.5 0 00-.454-.292H6.14L6.984.62A.5.5 0 006.12.173l-6 7a.5.5 0 00.379.825h5.359l-.844 3.38a.5.5 0 00.864.445l6-7a.5.5 0 00.075-.534z" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tabs items -->
+                             <!-- Tabs items -->
+<div class="max-w-xl md:max-w-none md:w-full mx-auto md:col-span-5 lg:col-span-6 mb-8 md:mb-0 md:order-1 md:h-full" data-aos="zoom-y-out">
+  <!-- 右侧面板高度 = grid 行高 = 左侧总高度 -->
+  <div class="relative h-full text-center lg:text-right overflow-hidden">
+
+    <!-- Item 1 -->
+    <div
+      class="absolute inset-0 w-full h-full"
+      x-show="tab === '1'"
+      x-transition:enter="transition ease-in-out duration-700 transform"
+      x-transition:enter-start="opacity-0 translate-y-16"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-in-out duration-300 transform"
+      x-transition:leave-start="opacity-100 translate-y-0"
+      x-transition:leave-end="opacity-0 -translate-y-16"
+    >
+      <!-- 用 flex 把 caption 算进总高度，图片占剩余空间 -->
+      <div class="h-full flex flex-col items-center justify-start">
+        <div class="flex-1 w-full flex items-center justify-center overflow-hidden">
+          <img
+            class="max-h-full max-w-full object-contain rounded"
+            src="images/outlinerJSON_01.jpg"
+            loading="lazy"
+            alt="Outliner"
+          />
+        </div>
+        <p class="text-center text-gray-600 mt-4">Json-formatted outline</p>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div
+      class="absolute inset-0 w-full h-full"
+      x-show="tab === '2'"
+      x-transition:enter="transition ease-in-out duration-700 transform"
+      x-transition:enter-start="opacity-0 translate-y-16"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-in-out duration-300 transform"
+      x-transition:leave-start="opacity-100 translate-y-0"
+      x-transition:leave-end="opacity-0 -translate-y-16"
+    >
+      <div class="h-full flex flex-col items-center justify-start">
+        <div class="flex-1 w-full flex items-center justify-center overflow-hidden">
+          <img
+            class="max-h-full max-w-full object-contain rounded"
+            src="images/pattern.jpg"
+            loading="lazy"
+            alt="Arranger"
+          />
+        </div>
+        <p class="text-center text-gray-600 mt-4">Layout Template</p>
+      </div>
+    </div>
+
+    <!-- Item 3 (两张图平分高度) -->
+    <div
+      class="absolute inset-0 w-full h-full"
+      x-show="tab === '3'"
+      x-transition:enter="transition ease-in-out duration-700 transform"
+      x-transition:enter-start="opacity-0 translate-y-16"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-in-out duration-300 transform"
+      x-transition:leave-start="opacity-100 translate-y-0"
+      x-transition:leave-end="opacity-0 -translate-y-16"
+    >
+      <div class="h-full flex flex-col overflow-hidden">
+        <div class="flex-1 w-full flex items-center justify-center overflow-hidden mb-6">
+          <img class="max-h-full max-w-full object-contain rounded" src="images/color.jpg" loading="lazy" alt="Refiner-1" />
+        </div>
+        <div class="flex-1 w-full flex items-center justify-center overflow-hidden">
+          <img class="max-h-full max-w-full object-contain rounded" src="images/refine.jpg" loading="lazy" alt="Refiner-2" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+                            
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            
+            
+             
+            <!-- Features world -->
+            <section id="results">
+                <div class="max-w-6xl mx-auto px-4 sm:px-6">
+                    <div class="py-12 md:py-20">
+
+                        <!-- Section header -->
+                        <div class="max-w-5xl mx-auto text-center pb-12 md:pb-16">
+                            <h1 class="h2 mb-4">Quantitive Results</h1>
+                        </div>
+
+                        <!-- Results Tables -->
+                        <div class="max-w-6xl mx-auto">
+                            <!-- Table 1: Content Metrics -->
+                            <div class="mb-12">
+                                <img class="w-full h-auto max-w-4xl mx-auto rounded shadow-xl" src="images/table.jpg" loading="lazy" alt="Content Metrics Table" />
+                                 
+                            </div> 
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- News -->
+            <section>
+  <div class="max-w-full mx-auto px-4 sm:px-6">
+    <div class="py-12 md:py-20">
+
+      <!-- Section header -->
+      <div class="max-w-3xl mx-auto text-center pb-12 md:pb-20">
+        <h2 class="h2">Qualitative Results</h2>
+      </div>
+
+      <!-- Qualitative Results Container -->
+      <div x-data="{ 
+          selectedCase: 1,
+          displayCase: 1,
+          imagesLoading: false,
+
+          /**
+           * Each case can have 1 or 2 A4-like images.
+           * Naming convention (no extension):
+           *  - single: 1.png
+           *  - double: 2-1.png, 2-2.png  (stack vertically inside the same A4 viewport)
+           */
+          caseImages: {
+            1: ['1'],
+            2: ['2'],
+            3: ['3_01','3_02'],
+            4: ['4_01','4_02'],
+            5: ['5'],
+            6: ['6']
+          },
+
+          getImageNames(caseNum) {
+            return this.caseImages[caseNum] || ['1'];
+          },
+
+          getImageUrls(caseNum) {
+            return this.getImageNames(caseNum).map(name => `./images/qualitative/${name}.jpg`);
+          },
+
+          async loadImages(caseNum) {
+            if (caseNum === this.displayCase) return;
+
+            this.imagesLoading = true;
+            const urls = this.getImageUrls(caseNum);
+
+            const preload = (url) => new Promise((resolve, reject) => {
+              const img = new Image();
+              img.onload = resolve;
+              img.onerror = reject;
+              img.src = url;
+            });
+
+            try {
+              await Promise.all(urls.map(preload));
+              this.displayCase = caseNum;
+              this.selectedCase = caseNum;
+            } catch (error) {
+              console.error('Failed to load images:', error);
+              // still switch, so user sees whatever is available
+              this.selectedCase = caseNum;
+              this.displayCase = caseNum;
+            } finally {
+              this.imagesLoading = false;
+            }
+          },
+
+          paperTitles: {
+            1: 'From Thousands to Billions: 3D Visual Language Grounding via Render-Supervised Distillation from 2D VLMs',
+            2: 'CLIP-Dissect: Automatic Description of Neuron Representations in Deep Vision Networks',
+            3: 'Denoising MCMC for Accelerating Diffusion-Based Generative Models',
+            4: 'Simplex Random Features',
+            5: 'Latent Diffusion Planning for Imitation Learning',
+            6: 'Exercise increases bone mass by lactate/Gpr81 signaling pathway'
+          },
+          paperLinks: {
+            1: 'https://arxiv.org/abs/2502.20389',
+            2: 'https://arxiv.org/abs/2204.10965',
+            3: 'https://arxiv.org/abs/2209.14593',
+            4: 'https://arxiv.org/abs/2301.13856',
+            5: 'https://arxiv.org/abs/2504.16925',
+            6: 'https://www.nature.com/articles/s42003-025-08957-1'
+          },
+          getPaperTitle(caseNum) {
+            return this.paperTitles[caseNum] || this.paperTitles[1];
+          },
+          getPaperLink(caseNum) {
+            return this.paperLinks[caseNum] || this.paperLinks[1];
+          }
+      }">
+
+        <!-- Paper Title -->
+        <div class="text-center mb-8">
+          <h3 class="text-2xl font-bold leading-snug tracking-tight">
+            <a :href="getPaperLink(displayCase)" target="_blank"
+               class="hover:text-blue-600 transition-colors duration-200"
+               x-text="getPaperTitle(displayCase)"></a>
+          </h3>
+        </div>
+
+        <!-- Cases: one row -->
+        <div class="mb-10">
+          <ul class="flex flex-wrap justify-center text-sm font-medium -m-2">
+            <template x-for="caseNum in [1,2,3,4,5,6]" :key="caseNum">
+              <li class="m-2">
+                <a class="inline-flex text-center py-2 px-4 rounded-full transition duration-150 ease-in-out"
+                   :class="{
+                     'text-gray-100': selectedCase === caseNum,
+                     'text-gray-800 bg-white hover:bg-gray-100 shadow-sm': selectedCase !== caseNum,
+                     'opacity-50 cursor-not-allowed': imagesLoading,
+                     'cursor-pointer': !imagesLoading
+                   }"
+                   :style="selectedCase === caseNum ? 'background-color: #0645ad;' : ''"
+                   @click="!imagesLoading && loadImages(caseNum)"
+                   x-text="'Case ' + caseNum"></a>
+              </li>
+            </template>
+          </ul>
+        </div>
+
+        <!-- A4 Portrait Viewer -->
+        <div class="max-w-screen-xl mx-auto">
+          <div class="qualitative-single-container">
+            <style>
+              .qualitative-single-container {
+                width: 100%;
+                max-width: 900px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: center;
+              }
+
+              /* A4 portrait viewport */
+              .qualitative-image-container {
+                background: white;
+                border-radius: 0.5rem;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                padding: 0.75rem;
+                transition: box-shadow 0.3s ease;
+                position: relative;
+                width: 100%;
+                max-width: 900px;
+                aspect-ratio: 210 / 297; /* A4 portrait */
+                overflow: hidden;
+              }
+
+              .qualitative-image-container:hover {
+                box-shadow: 0 25px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+              }
+
+              /* Scroll snapping for multi-page (2 images) cases */
+              .qualitative-scroll {
+                height: 100%;
+                width: 100%;
+                overflow-y: auto;
+                scroll-snap-type: y mandatory;
+                -webkit-overflow-scrolling: touch;
+              }
+
+              .qualitative-page {
+                min-height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                scroll-snap-align: start;
+              }
+
+              /* Image: height-driven, width auto (keeps A4-like aspect) */
+              .qualitative-page img {
+                height: 100%;
+                max-height: 100%;
+                max-width: 100%;
+                width: auto;
+                object-fit: contain;
+                border-radius: 0.5rem;
+                cursor: pointer;
+              }
+            </style>
+
+            <div class="flex flex-col w-full" data-aos="zoom-y-out">
+              <figure class="qualitative-image-container">
+
+                <!-- Loading overlay -->
+                <div x-show="imagesLoading" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+                  <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                </div>
+
+                <!-- Pages (1 or 2) inside an A4 viewport -->
+                <div class="qualitative-scroll">
+                  <template x-for="(url, idx) in getImageUrls(displayCase)" :key="url">
+                    <div class="qualitative-page" :class="idx === 0 && getImageUrls(displayCase).length > 1 ? 'mb-6' : ''">
+                      <img :src="url"
+                           loading="lazy"
+                           :alt="'SlideGen qualitative case ' + displayCase + ' - page ' + (idx + 1)"
+                           @click.stop="window.open(url, '_blank')" />
+                    </div>
+                  </template>
+                </div>
+
+              </figure>
+
+              <!-- Optional hint for multi-image cases -->
+              <p class="text-center text-gray-500 mt-4" x-show="getImageUrls(displayCase).length > 1">
+                Scroll inside the frame to view the next page.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+      </div> <!-- End Qualitative Results Container -->
+
+    </div>
+  </div>
+</section>
+
+ 
+
+ 
+            <!-- BibTeX -->
+            <section>
+                <div class="max-w-6xl mx-auto px-4 sm:px-6">
+                    <div class="py-12 md:py-20">
+
+                        <!-- Section header -->
+                        <div class="max-w-3xl mx-auto text-center pb-12 md:pb-16">
+                            <h1 class="h2 mb-4">BibTeX</h1>
+                        </div>
+
+                        <!-- BibTeX Code -->
+                        <div class="max-w-4xl mx-auto">
+                            <div class="bg-gray-50 rounded-lg border border-gray-200 p-6">
+                                <pre class="text-sm text-gray-800 whitespace-pre-wrap overflow-x-auto font-mono leading-relaxed"><code> @article{liang2025slidegen,
+  title={SlideGen: Collaborative Multimodal Agents for Scientific Slide Generation},
+  author={Liang, Xin and Zhang, Xiang and Xu, Yiwei and Sun, Siqi and You, Chenyu},
+  journal={arXiv preprint arXiv:2512.04529},
+  year={2025}}</code></pre>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            
+            
+        </main>
+
+        <!-- Site footer -->
+        <footer>
+            <div class="max-w-6xl mx-auto px-4 sm:px-6">
+
+                <!-- Bottom area -->
+                <div class="md:flex md:items-center md:justify-between py-4 md:py-8 border-t border-gray-200">
+
+
+                    <!-- Copyrights note -->
+                    <div class="text-sm text-gray-600 mr-4">&copy; Cruip.com. All rights reserved.</div>
+
+                </div>
+
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="js/vendors/alpinejs.min.js" defer></script>
+    <script src="js/vendors/aos.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        function openPaperPdf() {
+            window.open('pdf/neural-paper.pdf', '_blank');
+        }
+        
+        function openPosterImage() {
+            window.open('images/neural-poster.png', '_blank');
+        }
+    </script>
+
+</body>
+
+
+<!-- Mirrored from y-research-sbu.github.io/PosterGen/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 29 Nov 2025 14:40:27 GMT -->
+</html>
