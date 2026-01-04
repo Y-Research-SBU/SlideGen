@@ -1,1 +1,4 @@
 *.mp4 filter=lfs diff=lfs merge=lfs -text
+
+# GitHub Pages: do not use LFS under docs/video
+/docs/video/*.mp4 -filter -diff -merge
