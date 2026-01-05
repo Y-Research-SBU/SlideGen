@@ -33,7 +33,7 @@
     <img src="https://img.shields.io/badge/Project-Website-blue?style=flat-square&logo=googlechrome" alt="Project Website">
   </a>
 
-  <a href="https://github.com/Y-Research-SBU/PosterGen/issues/1">
+  <a href="https://github.com/Y-Research-SBU/SlideGen/blob/main/docs/images/wechat.jpg">
     <img src="https://img.shields.io/badge/WeChat-Group-green?style=flat-square&logo=wechat" alt="WeChat Group">
   </a>
 </p>
