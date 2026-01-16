@@ -249,7 +249,7 @@ experiment/gpt-5/**
 
 # models
 experiment/models/
-models/
+
 *.onnx
 *.tflite
 *.bin
