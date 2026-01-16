@@ -215,8 +215,7 @@ __pycache__/
 *.csv
 *.jsonl
 
-assets/ 
-models/ 
+assets/  
 PPTAgent/
 <4o_4o>_generated_slides/
 <4o_4o>_generated_posters/
@@ -249,7 +248,7 @@ experiment/gpt-5/**
 
 # models
 experiment/models/
-models/
+
 *.onnx
 *.tflite
 *.bin
