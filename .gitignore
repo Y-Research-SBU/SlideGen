@@ -246,7 +246,7 @@ experiment/gpt-5/**
 # large md/image bundles
 *_images_and_tables/
 
-# models
+
 experiment/models/
 
 *.onnx
