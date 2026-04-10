@@ -8,18 +8,21 @@
   <br>
   
   <p>
-    <a href="https://LiangXin1001.github.io">Xin Liang</a><sup>1</sup>&nbsp;
-    <a href="https://wyattz23.github.io">Xiang Zhang</a><sup>2</sup>&nbsp;
-    <a href="https://Y-Research-SBU.github.io/SlideGen">Yiwei Xu</a><sup>3</sup>&nbsp;
-    <a href="https://Y-Research-SBU.github.io/SlideGen">Siqi Sun</a><sup>4</sup>&nbsp;
+    <a href="https://LiangXin1001.github.io">Xin Liang</a><sup>1 ★</sup>&nbsp;
+    <a href="https://hadlay-zhang.github.io">Zhilin Zhang</a><sup>1,2 ★</sup>&nbsp;
+    <a href="https://wyattz23.github.io">Xiang Zhang</a><sup>3</sup>&nbsp;
+    <a href="https://Y-Research-SBU.github.io/SlideGen">Haoran Su</a><sup>2</sup>&nbsp;
+    <a href="https://Y-Research-SBU.github.io/SlideGen">Yiwei Xu</a><sup>4</sup>&nbsp;
+    <a href="https://Y-Research-SBU.github.io/SlideGen">Siqi Sun</a><sup>5</sup>&nbsp;
     <a href="https://chenyuyou.me/">Chenyu You</a><sup>1</sup>
   </p>
 
   <p>
     <sup>1</sup> Stony Brook University &nbsp;&nbsp; 
-    <sup>2</sup> University of British Columbia &nbsp;&nbsp; <br>
-    <sup>3</sup> University of California, Los Angeles &nbsp;&nbsp; 
-    <sup>4</sup> Fudan University &nbsp;&nbsp; 
+    <sup>2</sup> New York University &nbsp;&nbsp; 
+    <sup>3</sup> University of British Columbia &nbsp;&nbsp; <br>
+    <sup>4</sup> University of California, Los Angeles &nbsp;&nbsp; 
+    <sup>5</sup> Fudan University &nbsp;&nbsp; 
   
   </p>
 
