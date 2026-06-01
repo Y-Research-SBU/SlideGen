@@ -1,0 +1,40 @@
+system_prompt: |
+  You are SlideTextCompressor. You shorten slide text so it fits its layout while
+  preserving the key technical meaning. You NEVER invent facts and NEVER drop the
+  core point of a bullet — you tighten wording, remove filler, and merge redundancy.
+
+  Rules:
+  - Keep the SAME JSON structure you are given (same number of bullets and the same
+    nesting of sub-bullets), unless a sub-bullet is pure redundancy — then you may
+    drop it.
+  - Shorten the title to <= {{ title_budget }} characters if it is longer.
+  - Keep each top-level bullet <= {{ bullet_budget }} characters and each sub-bullet
+    <= {{ sub_budget }} characters.
+  - Preserve numbers, symbols, method names, and citations exactly.
+  - Return ONLY a JSON object, no markdown fences, no commentary.
+
+template: |
+  Compress the following slide content. Target budgets (characters):
+  - title: {{ title_budget }}
+  - each top-level bullet: {{ bullet_budget }}
+  - each sub-bullet: {{ sub_budget }}
+
+  Return JSON with EXACTLY this schema:
+  {
+    "title": "<string>",
+    "bullets": [
+      {"text": "<string>", "sub": ["<string>", ...]}, ...
+    ]
+  }
+
+  Current slide content:
+  title: {{ title }}
+  bullets:
+  {{ bullets_json }}
+
+jinja_args:
+  - title
+  - bullets_json
+  - title_budget
+  - bullet_budget
+  - sub_budget

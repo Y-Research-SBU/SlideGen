@@ -19,6 +19,11 @@ import json
 import difflib
 from pptx import Presentation
 from SlidesAgent.apply_color import *
+from SlidesAgent.template_introspect import (
+    scan_template,
+    resolve_template_path,
+    LayoutSpec,
+)
 
 
 
@@ -667,13 +672,15 @@ def _clear_text_frame(tf):
 
 def _fill_bullets(tf, bullets, lvl0_size=24, lvl1_size=24):
     _clear_text_frame(tf)
+    first = True
     for b in (bullets or []):
-         
-        p = tf.add_paragraph()
+        # Reuse the (empty) first paragraph instead of leaving a blank line on top.
+        p = tf.paragraphs[0] if first else tf.add_paragraph()
+        first = False
         p.text = (b.get("text") or "").strip()
         p.level = 0
         p.font.size = Pt(lvl0_size)
-        
+
         for s in (b.get("sub") or []):
             sp = tf.add_paragraph()
             sp.text = str(s).strip()
@@ -797,15 +804,149 @@ def delete_slide(prs: Presentation, slide_index: int) -> None:
     sldIdLst.remove(sldId)
     prs.part.drop_rel(rId)
 
-  
+
 # debug_list_placeholders(slide)
 
-def generate_pptx_from_plan( 
+# --------------------------------------------------------------------------- #
+# Generic, template-agnostic filling helpers (SlideGen v2)
+# --------------------------------------------------------------------------- #
+# Default font sizes (pt) used when a slide carries no per-slide "font" block.
+DEFAULT_FONTS = {"title": None, "body": 24, "sub": 24, "toc": 36}
+
+
+def _ph_by_idx_strict(slide, idx):
+    """Return the placeholder shape with the given idx, or None."""
+    if idx is None:
+        return None
+    for ph in getattr(slide, "placeholders", []):
+        if ph.placeholder_format.idx == idx:
+            return ph
+    return None
+
+
+def _set_ph_text(slide, idx, text, font_size=None):
+    """Set a single line of text on the placeholder identified by idx."""
+    ph = _ph_by_idx_strict(slide, idx)
+    if ph is None or not getattr(ph, "has_text_frame", False):
+        return False
+    tf = ph.text_frame
+    tf.clear()
+    tf.paragraphs[0].text = str(text or "")
+    if font_size:
+        tf.paragraphs[0].font.size = Pt(font_size)
+    return True
+
+
+def _fill_bullets_idx(slide, idx, bullets, body_size=24, sub_size=24):
+    """Fill a body placeholder (by idx) with hierarchical bullets."""
+    ph = _ph_by_idx_strict(slide, idx)
+    if ph is None or not getattr(ph, "has_text_frame", False):
+        return False
+    _fill_bullets(ph.text_frame, bullets, lvl0_size=body_size, lvl1_size=sub_size)
+    return True
+
+
+def _bullets_from_slide_info(slide_info):
+    """Normalize a slide_info into a list of column dicts {subsection, bullets}.
+
+    Single-body slides yield one column; multi-column slides (T19-style) use the
+    explicit "columns" key when present, otherwise the flat "bullets" list.
+    """
+    cols = slide_info.get("columns")
+    if cols:
+        return [
+            {
+                "subsection": c.get("subsection", "") or c.get("title", "") or "",
+                "bullets": c.get("bullets", []) or [],
+            }
+            for c in cols
+        ]
+    return [
+        {
+            "subsection": slide_info.get("subsection", "") or "",
+            "bullets": slide_info.get("bullets", []) or [],
+        }
+    ]
+
+
+def _distribute_bullets(columns, n_body):
+    """Map content columns onto the layout's body placeholders.
+
+    Returns a list of length ``n_body`` of {subsection, bullets} dicts. When the
+    layout has more body slots than content columns, extra slots get blank
+    content; when fewer, surplus columns are merged into the last slot.
+    """
+    if n_body <= 0:
+        return []
+    out = [{"subsection": "", "bullets": []} for _ in range(n_body)]
+    if not columns:
+        return out
+    if len(columns) <= n_body:
+        for i, c in enumerate(columns):
+            out[i] = c
+    else:
+        for i in range(n_body - 1):
+            out[i] = columns[i]
+        merged = {"subsection": columns[n_body - 1].get("subsection", ""), "bullets": []}
+        for c in columns[n_body - 1:]:
+            merged["bullets"].extend(c.get("bullets", []))
+        out[n_body - 1] = merged
+    return out
+
+
+def fill_content_slide(slide, layout_spec: LayoutSpec, slide_info, section_no, fonts=None):
+    """Fill a content slide generically from its inferred layout roles.
+
+    * ``part``  -> section number (e.g. "03")
+    * ``title`` -> subsection (or section) title
+    * ``body_idxs`` -> bullet columns (single or multi-column)
+
+    Honors per-slide font overrides via the ``fonts`` dict
+    ({"title","body","sub"}); falls back to DEFAULT_FONTS.
+    """
+    fonts = {**DEFAULT_FONTS, **(slide_info.get("font") or {}), **(fonts or {})}
+
+    # Part number (tiny top-left box).
+    if layout_spec.part_idx is not None:
+        _set_ph_text(slide, layout_spec.part_idx, f"{section_no}")
+
+    # Title bar.
+    title_txt = slide_info.get("subsection") or slide_info.get("section") or slide_info.get("title") or ""
+    if layout_spec.title_idx is not None:
+        _set_ph_text(slide, layout_spec.title_idx, title_txt, font_size=fonts.get("title"))
+
+    # Body columns. Each layout column is {"title": idx|None, "body": idx}; a
+    # short heading box (when present) gets the column subsection, and bullets go
+    # into the tall box — so two-column layouts (T19) keep headings separate
+    # from their bullet text instead of dumping everything in one box.
+    body_cols = layout_spec.body_cols or [{"title": None, "body": i} for i in layout_spec.body_idxs]
+    columns = _bullets_from_slide_info(slide_info)
+    mapped = _distribute_bullets(columns, len(body_cols))
+    multi = len(body_cols) > 1
+
+    for slot, col in zip(body_cols, mapped):
+        bullets = col.get("bullets", [])
+        subsec = col.get("subsection", "")
+        if slot.get("title") is not None:
+            # dedicated heading box for this column
+            if multi and subsec:
+                _set_ph_text(slide, slot["title"], subsec, font_size=fonts.get("title"))
+            _fill_bullets_idx(slide, slot["body"], bullets,
+                              body_size=fonts.get("body", 24), sub_size=fonts.get("sub", 24))
+        else:
+            # no heading box: prefix the subsection as a bullet for multi-col layouts
+            if multi and subsec:
+                bullets = [{"text": subsec, "sub": []}] + bullets
+            _fill_bullets_idx(slide, slot["body"], bullets,
+                              body_size=fonts.get("body", 24), sub_size=fonts.get("sub", 24))
+
+
+def generate_pptx_from_plan(
     args,
-    template: Path | int 
+    template: Path | int = None
 ):
- 
-     
+
+
     figs_json_path  =  f"contents/{args.paper_name}/<{args.model_name_t}_{args.model_name_v}>_figures.json"
     formula_json_path = f"contents/{args.paper_name}/<{args.model_name_t}_{args.model_name_v}>_formula_match.json"
     paper_outline_json = f'contents/{args.paper_name}/<{args.model_name_t}_{args.model_name_v}>_raw_content.json' 
@@ -814,161 +955,161 @@ def generate_pptx_from_plan(
     with open(formula_json_path, encoding="utf-8") as f: formula_data   = json.load(f)
     
     plan_json = f'contents/{args.paper_name}/<{args.model_name_t}_{args.model_name_v}>_slide_plan.json'
-     
-    made = pair_T1_to_T19(plan_json)   
-    print(f"[plan] T1->T19 pairs made: {made}")
-      
-    plan: Dict = json.loads(Path(plan_json).read_text(encoding="utf-8"))
 
+    # ---------- resolve & scan the template ----------
+    if template is None:
+        template_path = getattr(args, "template_path", None)
+        if not template_path:
+            template_path = resolve_template_path(
+                getattr(args, "template_name", None),
+                getattr(args, "template_dir", "utils/slides_template"),
+            )
+    else:
+        template_path = resolve_template_path(template)  # int or name -> path
+    template_path = str(template_path)
+    spec = scan_template(template_path)
+    print(f"[filler] template={template_path}")
+    print(f"[filler] roles={spec.roles}")
+
+    # T1->T19 pairing only makes sense when both layouts exist in this deck.
+    if "T1_TextOnly" in spec.layouts and "T19_2Text" in spec.layouts:
+        made = pair_T1_to_T19(plan_json)
+        print(f"[plan] T1->T19 pairs made: {made}")
+
+    plan: Dict = json.loads(Path(plan_json).read_text(encoding="utf-8"))
 
     title    = outline_json["metadata"]["title"]
     subtitle = outline_json["metadata"]["author"]
-  
-    template_path = f"utils/slides_template/slides{template}_template.pptx"
+
     prs = Presentation(template_path)
-      
+
     theme_color = extract_theme_color_from_title(prs)
     print("Theme color:", theme_color)
-     
-    # test 
+
     print("Available slide layouts in template:")
     for layout in prs.slide_layouts:
         print("-", layout.name)
- 
+
     # ---------- cover ----------
-    cover_layout = prs.slide_layouts.get_by_name("Title Slide")
-    cover = prs.slides.add_slide(cover_layout)
+    cover_name = spec.role_layout("cover")
+    if cover_name:
+        cover_spec = spec.get(cover_name)
+        cover = prs.slides.add_slide(prs.slide_layouts.get_by_name(cover_name))
+        c_title = cover_spec.title_type_idx()
+        if c_title is not None:
+            _set_ph_text(cover, c_title, title)
+        sub_idxs = cover_spec.secondary_text_idxs(exclude=c_title)
+        if sub_idxs:
+            _set_ph_text(cover, sub_idxs[0], subtitle)
+    else:
+        print("[filler] WARN: no cover layout found; skipping cover slide.")
 
-    _placeholder_by_name(cover, "Title 1").text = title
-    _placeholder_by_name(cover, "Subtitle 2").text = subtitle
-
-    # ---------- Contents ----------
-    outline_layout = prs.slide_layouts.get_by_name("Mulu")
-    outline = prs.slides.add_slide(outline_layout)
-
-    tf = _placeholder_by_name(outline, "Text Placeholder 1").text_frame
-    tf.clear()
-    seen = set() 
+    # ---------- Contents (table of contents) ----------
+    toc_name = spec.role_layout("toc")
+    seen = set()
     unique_sections = []
- 
     for slide in plan["slides"]:
         sec = slide["section"]
         if sec not in seen:
             seen.add(sec)
             unique_sections.append(sec)
- 
-    for i, sec in enumerate(unique_sections):
-        if i == 0:
-            p = tf.paragraphs[0]  # Use first paragraph to avoid empty line
-        else:
-            p = tf.add_paragraph()
-        p.text = sec
-        p.level = 0
-        p.font.size = Pt(36) 
-        # p.font.fill.solid()
-        # set_font_color(p, theme_color)
-            
+
+    if toc_name:
+        toc_spec = spec.get(toc_name)
+        outline = prs.slides.add_slide(prs.slide_layouts.get_by_name(toc_name))
+        toc_idx = toc_spec.body_idxs[0] if toc_spec.body_idxs else toc_spec.title_type_idx()
+        toc_ph = _ph_by_idx_strict(outline, toc_idx)
+        if toc_ph is not None and toc_ph.has_text_frame:
+            tf = toc_ph.text_frame
+            tf.clear()
+            for i, sec in enumerate(unique_sections):
+                p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+                p.text = sec
+                p.level = 0
+                p.font.size = Pt(DEFAULT_FONTS["toc"])
+    else:
+        print("[filler] WARN: no TOC layout found; skipping contents slide.")
+
+    divider_name = spec.role_layout("divider")
+
     # ---------- Body ----------
     current_section  = None
     section_counter  = 0
-    for slide_info in plan["slides"]: 
-        # ---------- Content ----------
+    for slide_info in plan["slides"]:
+        # ---------- Section divider ----------
         if slide_info["section"] != current_section:
             current_section = slide_info["section"]
-            section_counter += 1 
-            section_layout = prs.slide_layouts.get_by_name("dan_mulu")
-            sec_slide = prs.slides.add_slide(section_layout)
-            for shape in sec_slide.shapes:
-                print(f"Shape: {shape.name}")
-            _placeholder_by_name(sec_slide, "Text Placeholder 2").text = f"PART {section_counter:02d}"
-            _placeholder_by_name(sec_slide, "Title 1").text = current_section
-  
+            section_counter += 1
+            if divider_name:
+                div_spec = spec.get(divider_name)
+                sec_slide = prs.slides.add_slide(prs.slide_layouts.get_by_name(divider_name))
+                d_title = div_spec.title_type_idx()
+                if d_title is not None:
+                    _set_ph_text(sec_slide, d_title, current_section)
+                part_idxs = div_spec.secondary_text_idxs(exclude=d_title)
+                if part_idxs:
+                    _set_ph_text(sec_slide, part_idxs[0], f"PART {section_counter:02d}")
+
         template_id = slide_info["template_id"]
         layout = prs.slide_layouts.get_by_name(template_id)
-          
         if layout is None:
-            raise ValueError(f" Template layout '{template_id}' not found in template.")
+            raise ValueError(f" Template layout '{template_id}' not found in template '{template_path}'.")
+        layout_spec = spec.get(template_id)
         slide = prs.slides.add_slide(layout)
-    
-        if template_id == "T19_2Text":
-            for shape in slide.shapes:
-                if shape.shape_type == MSO_SHAPE_TYPE.PLACEHOLDER and shape.is_placeholder:
-                    if shape.has_text_frame:
-                        print(f" Name: {shape.name}")
-                        print(f"  Left: {shape.left}, Top: {shape.top}, Width: {shape.width}, Height: {shape.height}")
-                        print(f"  Text: '{shape.text_frame.text.strip()}'")
-    
-            fill_T19_2Text(slide, slide_info, section_no_text=f"{section_counter:02d}")
-            continue
 
-        part_ph, title_ph, body_ph = find_text_placeholders(slide)
-  
-        part_ph.text = f"{section_counter:02d}" 
-        title_ph.text = slide_info["subsection"]
-  
-   
-        # bullets + sub-bullets
-        if body_ph:
-            tf = body_ph.text_frame
-            # if tf.paragraphs:
-            #     tf.paragraphs[0].text = ""   
-            # else:
-            #     tf.clear() 
-            for bullet in slide_info["bullets"]:
-                p = tf.add_paragraph()
-                p.text, p.level = bullet["text"], 0
-                p.font.size = Pt(24)
-                for sub in bullet.get("sub", []):
-                    sp = tf.add_paragraph()
-                    sp.text, sp.level = sub, 1
-                    sp.font.size = Pt(24)
-         
-         
+        # ---------- text (generic, role-based) ----------
+        fill_content_slide(slide, layout_spec, slide_info, f"{section_counter:02d}")
+
+        # ---------- visuals ----------
         visuals = resolve_visual_paths(slide_info, args)
         insert_visuals_auto(slide, visuals)
- 
 
         # ---------- note ----------
-        notes_chunks = [] 
-        txt = get_content(slide_info["section"], slide_info["subsection"], outline_json)
+        notes_chunks = []
+        txt = get_content(slide_info["section"], slide_info.get("subsection", ""), outline_json)
         if txt: notes_chunks.append(txt)
         if slide_info.get("images"):
-            img_r = get_image_reasons(slide_info["section"], slide_info["subsection"],
+            img_r = get_image_reasons(slide_info["section"], slide_info.get("subsection", ""),
                                       slide_info["images"], figs_data)
             notes_chunks.append(img_r)
         if slide_info.get("tables"):
-            tb_r = get_table_reasons(slide_info["section"], slide_info["subsection"],
+            tb_r = get_table_reasons(slide_info["section"], slide_info.get("subsection", ""),
                                      slide_info["tables"], figs_data)
             notes_chunks.append(tb_r)
         if slide_info.get("formulas"):
             fm_r = get_formula_reasons(
                 slide_info["section"],
-                slide_info["subsection"],
+                slide_info.get("subsection", ""),
                 slide_info["formulas"],
                 formula_data  ,
                 )
-                
             notes_chunks.append(fm_r)
-                    
+
         if notes_chunks:
             nframe = slide.notes_slide.notes_text_frame
             if nframe.text and not nframe.text.endswith("\n"):
                 nframe.text += "\n"
-            nframe.text += "\n\n".join(notes_chunks)
+            nframe.text += "\n\n".join([c for c in notes_chunks if c])
 
- 
-    thanks_layout = prs.slide_layouts.get_by_name("Last_page")
-    thanks = prs.slides.add_slide(thanks_layout)
-    title_ph = _placeholder_by_name(thanks, "Title 1")
-    title_ph.text = "THANKS!"
- 
-    run = title_ph.text_frame.paragraphs[0].runs[0]
-    run.font.bold = True
-    output_pptx = f'contents/{args.paper_name}/{args.model_name_t}_{args.model_name_v}_output_slides.pptx' 
+    # ---------- thanks / last page ----------
+    last_name = spec.role_layout("last")
+    if last_name:
+        last_spec = spec.get(last_name)
+        thanks = prs.slides.add_slide(prs.slide_layouts.get_by_name(last_name))
+        l_title = last_spec.title_type_idx()
+        if l_title is not None:
+            _set_ph_text(thanks, l_title, "THANKS!")
+            tph = _ph_by_idx_strict(thanks, l_title)
+            if tph is not None and tph.text_frame.paragraphs[0].runs:
+                tph.text_frame.paragraphs[0].runs[0].font.bold = True
+    else:
+        print("[filler] WARN: no last-page layout found; skipping thanks slide.")
+
+    output_pptx = f'contents/{args.paper_name}/{args.model_name_t}_{args.model_name_v}_output_slides.pptx'
     prs.save(str(output_pptx))
-    delete_slide(prs, 0)    
+    delete_slide(prs, 0)
     prs.save(str(output_pptx))
-    
+
     prefix = f"<{args.model_name_t}_{args.model_name_v}>_images_and_tables"
     base_dir = Path(prefix) / args.paper_name
     target_name = f"{args.paper_name}-with-image-refs_artifacts"

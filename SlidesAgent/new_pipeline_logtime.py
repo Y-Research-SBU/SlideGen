@@ -113,9 +113,23 @@ if __name__ == '__main__':
                         "1 = use bbox crop from docling, "
                         "2 = use LaTeX code rendering, "
                         "3 = use user-marked boxes")
+    parser.add_argument('--template', type=str, default='slides3_template',
+                    help="Template .pptx to use (filename stem) from --template_dir. "
+                         "Drop your own .pptx into that folder and pass its name here.")
+    parser.add_argument('--template_dir', type=str, default='utils/slides_template',
+                    help="Folder containing template .pptx files.")
+    parser.add_argument('--no_overflow_refine', action='store_true',
+                    help="Disable the readability-aware overflow refiner (text "
+                         "compression -> font scaling -> template switch/split).")
     args = parser.parse_args()
 
-    
+    # Resolve the chosen template once and stash it on args for the agents/filler.
+    from SlidesAgent.template_introspect import resolve_template_path
+    args.template_name = args.template
+    args.template_path = str(resolve_template_path(args.template, args.template_dir))
+    print(f"[pipeline] using template: {args.template_path}")
+
+
     if args.formula_mode == 1:
         print("👉 Using Docling bbox crop method...") 
     elif args.formula_mode == 2:
@@ -226,20 +240,30 @@ if __name__ == '__main__':
         input_token, output_token, time_taken  = generate_slide_plan(args)
         total_input_tokens_t += input_token
         total_output_tokens_t += output_token
- 
+
         detail_log['arranger_in_t'] = input_token
         detail_log['arranger_out_t'] = output_token
         detail_log['arranger_time'] = time_taken
+
+        # Readability-aware overflow handling: compress -> font scale -> switch/split.
+        if not args.no_overflow_refine:
+            try:
+                from SlidesAgent.overflow_refiner import refine_overflow
+                ov_stats = refine_overflow(args)
+                detail_log['overflow'] = ov_stats
+            except Exception as exc:
+                print(f"[overflow] refiner failed ({exc}); continuing with un-refined plan")
+
         end_time = time.time()
         time_taken = end_time - start_time
         print("time_taken:",time_taken)
         # log
         output_dir = f'contents/{args.paper_name}'
-         
-         
+
+
     detail_log_file = os.path.join(output_dir, f'<{args.model_name_t}_{args.model_name_v}>_log.json')
     with open(detail_log_file, 'w') as f:
         json.dump(detail_log, f, indent=4)
     print("✅ all files exist……")
-    generate_pptx_from_plan(args,3)
+    generate_pptx_from_plan(args)
  

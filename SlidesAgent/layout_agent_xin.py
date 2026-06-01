@@ -8,7 +8,8 @@ from jinja2 import Environment, StrictUndefined
 from utils.src.utils import   get_json_from_response
 from utils.wei_utils import *
 from utils.pptx_utils import extract_text_from_responses
-from openai import OpenAI       
+from SlidesAgent.template_introspect import scan_template, build_layout_library_md, resolve_template_path
+from openai import OpenAI
 from camel.models import ModelFactory          
 from camel.agents import ChatAgent     
 from pptx.util import Cm, Pt
@@ -33,7 +34,26 @@ def generate_slide_plan(
     images = json.loads(Path(f'<{args.model_name_t}_{args.model_name_v}>_images_and_tables/{args.paper_name}/images_filtered.json').read_text(encoding="utf-8"))
     tables = json.loads(Path(f'<{args.model_name_t}_{args.model_name_v}>_images_and_tables/{args.paper_name}/tables_filtered.json' ).read_text(encoding="utf-8"))
     with open(f'utils/prompt_templates/layout_agent_xin.yaml', "r", encoding="utf-8") as f:
-        prompt_cfg =  yaml.safe_load(f) 
+        prompt_cfg =  yaml.safe_load(f)
+
+    # Build the layout library from the *actual* template the user selected, so the
+    # arranger only ever picks template_ids that exist in their deck.
+    template_path = getattr(args, "template_path", None)
+    if not template_path:
+        template_path = resolve_template_path(
+            getattr(args, "template_name", None),
+            getattr(args, "template_dir", "utils/slides_template"),
+        )
+    spec = scan_template(template_path)
+    layout_library = build_layout_library_md(spec)
+    print(f"[arranger] template={template_path} content_layouts={len(spec.content_layouts)}")
+
+    jinja_env = Environment(undefined=StrictUndefined)
+    # The system prompt contains {{ layout_library }} — render it before use.
+    system_prompt = jinja_env.from_string(prompt_cfg['system_prompt']).render(
+        layout_library=layout_library
+    )
+
     start_time = time.time()
     use_gpt5_responses = False
     cfg = get_agent_config(args.model_name_v)
@@ -57,29 +77,29 @@ def generate_slide_plan(
                 url=cfg.get("url"),
             )  
         agent = ChatAgent(
-            system_message=prompt_cfg['system_prompt'],  
+            system_message=system_prompt,
             model=model,
             message_window_size=5,
-        ) 
+        )
 
-    jinja_env = Environment(undefined=StrictUndefined)
     jinja_args = {
         'raw_result_json': raw_json,
         'figures_json': figures_json,
         'formulas_json': formulas_json,
         'image_informations_json' : images,
         'table_informations_json' : tables
-    } 
-    template =  jinja_env.from_string(prompt_cfg["template"]) 
+    }
+    template =  jinja_env.from_string(prompt_cfg["template"])
     planner_prompt = template.render(**jinja_args)
-    
-     
+
+
     if use_gpt5_responses:
         response = client.responses.create(
-            model=args.model_name_v,               
+            model=args.model_name_v,
+            instructions=system_prompt,
             input=planner_prompt,
             reasoning={"effort": "minimal"},
-            text={"verbosity": "low"},    
+            text={"verbosity": "low"},
         )
         raw_text = extract_text_from_responses(response)
         print("slide plan:",raw_text)
@@ -87,8 +107,7 @@ def generate_slide_plan(
         out_tok = getattr(getattr(response, "usage", None), "output_tokens", None)
     elif args.model_name_t.startswith('vllm_qwen'):
         print("planner_prompt",planner_prompt)
-        print("prompt_cfg['system_prompt']",prompt_cfg['system_prompt'])
-        response = chat_via_vllm(planner_prompt,cfg,model,prompt_cfg['system_prompt'])
+        response = chat_via_vllm(planner_prompt,cfg,model,system_prompt)
         raw_text = response.choices[0].message.content 
         print("raw_output by qwen : ")
         in_tok = response.usage.prompt_tokens

@@ -15,30 +15,18 @@ system_prompt: |
   ---
   
   ## What you must do for **every subsection**
-  1. **Pick the best slide template** from this library and output its `template_id`:
+  1. **Pick the best slide template** from the library below and output its `template_id`.
+     The library is generated from the *actual* template the user provided, so the set of
+     available `template_id` values can change. You MUST choose one of the ids listed here:
 
-    | ID | When to use |
-    |----|-------------|
-    | T1_TextOnly   | No images/tables |
-    | T2_ImageRight | 1 image + ≤4 bullets |
-    | T3_ImageLeft  | Mirror of T2 (alternate left/right across consecutive slides) |
-    | T4_ImageTop   | 1 wide image (aspect > 1.6) or table | 
-    | T5_TwoImages            | Exactly 2 side-by-side images, no text                                      |
-    | T5_TwoImages2           | Two side-by-side images on top, with a text block below                     |
-    | T7_2x2_TopImage         | 2*2 layout: top two blocks are images, bottom two are text                  |
-    | T8_2x2_BottomImage      | 2*2 layout: top two blocks are text, bottom two are images                  |
-    | T9_2x2_AltTextImg       | 2*2 layout: images on top-left & bottom-right, text on top-right & bottom-left |
-    | T10_4Img_2x2Grid        | Four images arranged in a 2*2 grid, no text                                 |
-    | T11_3Img_TopTextBottom  | Vertically divided: 3 images on top, text block below                       |
-    | T12_3Img_BottomTextTop  | Text block on top, 3 square images in one row below                         |
-    | T13_3Img                | Title on top, followed by 3 evenly spaced images                            |
-    | T14_ImageRight_1Formula | Right column has two slots: top-right = one image or one table, bottom-right = one formula; left column = text bullets. Use when the slide has one key equation plus one main visual. |
-    | T15_ImageLeft_1Formula | Left column has two slots: top-left = one image or one table, bottom-left = one formula; right column = text bullets. Use when the slide has one key equation plus one main visual.  |
-    | T16_1Img_2formula_TopTextBottom | Bottom = text block; top are three rows: row1 = one image or one table, row2 = one formula, row3 = one formula. Use for one main visual plus two formulas. |
-    | T17_2Img_1formula_TopTextBottom | Top row: two visuals side by side (each is one image or one table); middle row: one formula; bottom: text block. |
-    | T18_2formula_TopTextBottom | Top 2 rows: two formulas; bottom: text block. |
-    if any formula exists, you must use a formula-capable template (T14/T15/T16/T17/T18). Do not use T2/T3/T4 when formula≥1.”
-    **If a subsection contains any formula, you must choose a formula-capable template—T14/T15 (1 image/table + 1 formula), T16 (1 image/table + 2 formulas), T17 (2 images/tables + 1 formula), or T18 (2 formulas)—and count formulas as picture slots so capacity ≥ (images + tables + formulas). The only exception is a single formula with no other visuals: treat it as a single visual—use T4_ImageTop if wide (aspect ≥ 1.6), otherwise alternate T2_ImageRight/T3_ImageLeft.**
+    {{ layout_library }}
+
+    Selection guidance:
+    - Match the number of visuals to the layout's image slots, and the amount of text to its text slots.
+    - **Count every formula as one image slot.** If a subsection contains any formula, choose a layout
+      whose image slots >= (images + tables + formulas). The only exception is a single formula with no
+      other visuals: treat it as one visual and use a 1-image layout (prefer a wide/top one if aspect >= 1.6).
+    - If a subsection has no images/tables/formulas, prefer a text-only layout.
   2. **Generate hierarchical bullets** summarising the subsection:  
      • Up to **6 top-level bullets**.  
      • Each top bullet may have **0-6 sub-bullets** (2-level outline).  
